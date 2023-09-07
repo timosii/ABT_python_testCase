@@ -27,5 +27,5 @@ def main(filename):
 
 if __name__ == '__main__':
     # передать имя файла из аргументов командной строки
-
+    filename = "test.json"
     main(filename)

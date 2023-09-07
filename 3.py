@@ -22,17 +22,22 @@ class SharedState:
 # добавляя элементы в конец списка 'items'
 class Server:
     state: SharedState
+    semaphore: asyncio.Semaphore
 
-    def __init__(self, state: SharedState):
+    def __init__(self, state: SharedState, semaphore: asyncio.Semaphore):
         self.state = state
+        self.semaphore = semaphore
 
     async def handle_request(self, value: int):
-        await self.state.modify(value)
+        async with self.semaphore:
+            await self.state.modify(value)
 
 
 async def main():
     state = SharedState()
-    server = Server(state)
+    semaphore = asyncio.Semaphore()
+    server = Server(state, semaphore)
+
 
     # имитируем запуск 10 запросов к серверу
     requests = [server.handle_request(value) for value in range(10)]

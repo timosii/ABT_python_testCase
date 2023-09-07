@@ -24,6 +24,17 @@ def main():
     Важно: написать наиболее эффективный алгоритм (по числу итераций)
     """
     # тут явно нужен алгоритм
+    end = 10_000_000
+    begin = 1
+    while begin != end:
+        mid = (begin + end) // 2
+
+        if black_book(mid):
+            begin = mid + 1
+        else:
+            end = mid - 1
+
+    print(begin - 1)
 
 
 if __name__ == '__main__':
