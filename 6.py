@@ -1,7 +1,7 @@
 import json
 import os
 import subprocess
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import List, Optional
 
@@ -31,9 +31,33 @@ def check_chain(filepath: Path) -> bool:
     status_code = os.system(f"./chainTest {filepath}")
     return status_code == 0
 
+# вспомогательная функция для конвертации объекта Response в словарь
+def response_to_dict(response):
+    return {
+        "items": [asdict(item) for item in response.items],
+        "total": response.total
+    }
 
 def solution(response: Response) -> Path:
-    raise NotImplementedError
+    items = response.items
+    items_ordered = [] # список объектов ChainData, в качестве первого выбираем тот, у которого нет предыдущего элемента
+    for item in items:
+        if item.prev_item_id is None:
+            items_ordered.append(item)
+            items.remove(item)
+    
+    # добавляем список остальных объектов ChainData, отсортированных по значению предыдущего элемента
+    items_ordered.extend(sorted(items, key=lambda item: item.prev_item_id))
+    # сохраняем цепочку в объект Response
+    result = Response(items=items_ordered, total=len(items_ordered))
+    # конвертируем в словарь при помощи вспомогательной функции
+    result_dict = response_to_dict(result)
+    # сохраняем словарь в JSON файл
+    filepath = 'ordered_chain.json'
+    with open(filepath, "w") as json_file:
+        json.dump(result_dict, json_file, indent=4)
+
+    return Path(filepath)
 
 
 def main():
