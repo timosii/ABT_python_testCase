@@ -14,14 +14,14 @@ def task1():
                 files_count += 1
     print(files_count)
 
-
-
+# вспомогательная функция для поиска email адресов в файле
 def find_emails(file_path):
     with open(file_path, 'r') as file:
         text = file.read()
         email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b'
         emails = re.findall(email_pattern, text)
         return emails
+
 
 def task2():
     # в папке test найти все email адреса записанные в файлы
@@ -35,7 +35,8 @@ def task2():
             emails.extend(emails_in_file)
     
     elapsed_time = time.time() - start
-    print(emails, elapsed_time)
+    print(emails)
+    print(elapsed_time)
 
 
 def task2_parallel():
@@ -51,7 +52,9 @@ def task2_parallel():
     results = pool.map(find_emails, files)
     all_emails = [email for emails in results for email in emails]
     elapsed_time = time.time() - start
-    print(all_emails, elapsed_time)
+    print(all_emails)
+    print(elapsed_time)
+
 
 def main():
     task1()

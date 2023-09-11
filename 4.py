@@ -42,9 +42,9 @@ def main(filename):
 
 
 if __name__ == '__main__':
-    # передать имя файла из аргументов командной строки
+    # передать имя файла из аргументов командной строки.
+    # используйте test.json для тестирования
     parser = argparse.ArgumentParser(description="Take filename")
     parser.add_argument('filename', type=str, help="filename for analysis")
     filename = parser.parse_args().filename
-    # filename = "test.json"
     main(filename)
